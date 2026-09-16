@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1000" viewBox="0 0 1200 1000">
+<rect x="20" y="20" width="1160" height="960" rx="42" fill="#fffdf8" stroke="#333" stroke-width="4"/>
+<text x="60" y="72" font-size="34" font-family="sans-serif" font-weight="700">今日课表</text>
+<text x="1140" y="72" text-anchor="end" font-size="24" font-family="sans-serif">第 3 周 · 周三</text>
+<g stroke="#aaa" stroke-width="2">
+<line x1="60" y1="110" x2="1140" y2="110"/>
+<line x1="250" y1="110" x2="250" y2="930"/>
+<line x1="470" y1="110" x2="470" y2="930"/>
+<line x1="690" y1="110" x2="690" y2="930"/>
+<line x1="910" y1="110" x2="910" y2="930"/>
+<line x1="1140" y1="110" x2="1140" y2="930"/>
+<line x1="60" y1="250" x2="1140" y2="250"/>
+<line x1="60" y1="420" x2="1140" y2="420"/>
+<line x1="60" y1="590" x2="1140" y2="590"/>
+<line x1="60" y1="760" x2="1140" y2="760"/>
+<line x1="60" y1="930" x2="1140" y2="930"/>
+</g>
+<g font-family="sans-serif" text-anchor="middle">
+<text x="155" y="190" font-size="26" font-weight="700">时间</text>
+<text x="360" y="190" font-size="26" font-weight="700">周一</text>
+<text x="580" y="190" font-size="26" font-weight="700">周二</text>
+<text x="800" y="190" font-size="26" font-weight="700">周三</text>
+<text x="1025" y="190" font-size="26" font-weight="700">周四</text>
+<text x="155" y="325" font-size="22">1–2节</text>
+<text x="155" y="495" font-size="22">3–4节</text>
+<text x="155" y="665" font-size="22">5–6节</text>
+<text x="155" y="835" font-size="22">7–8节</text>
+</g>
+<g font-family="sans-serif">
+<text x="270" y="300" font-size="22" font-weight="700">课程名称</text><text x="270" y="335" font-size="17">教一 203</text>
+<text x="700" y="300" font-size="22" font-weight="700">遥感原理</text><text x="700" y="335" font-size="17">教二 301</text>
+<text x="920" y="470" font-size="22" font-weight="700">课程名称</text><text x="920" y="505" font-size="17">教一 105</text>
+</g>
+</svg>

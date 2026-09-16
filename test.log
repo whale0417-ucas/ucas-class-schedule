@@ -1,0 +1,134 @@
+
+> ucas-timetable-android@1.2.0 test
+> node --test tests/logic.test.mjs
+
+TAP version 13
+# Subtest: syllabus parsing preserves every nonempty line in the course snapshot
+ok 1 - syllabus parsing preserves every nonempty line in the course snapshot
+  ---
+  duration_ms: 693.148066
+  type: 'test'
+  ...
+# Subtest: syllabus sections separate chapters, continuation text and empty references safely
+ok 2 - syllabus sections separate chapters, continuation text and empty references safely
+  ---
+  duration_ms: 1.585197
+  type: 'test'
+  ...
+# Subtest: lesson clock times preserve gaps and cover the last evening period
+ok 3 - lesson clock times preserve gaps and cover the last evening period
+  ---
+  duration_ms: 2.933835
+  type: 'test'
+  ...
+# Subtest: batch matching accepts pasted separators, normalizes case and preserves class suffixes
+ok 4 - batch matching accepts pasted separators, normalizes case and preserves class suffixes
+  ---
+  duration_ms: 1.358387
+  type: 'test'
+  ...
+# Subtest: batch matching retains ambiguous records and rejects empty or excessive input
+ok 5 - batch matching retains ambiguous records and rejects empty or excessive input
+  ---
+  duration_ms: 1.08942
+  type: 'test'
+  ...
+# Subtest: batch review deduplicates selections, checks internal conflicts and never blocks on quota
+ok 6 - batch review deduplicates selections, checks internal conflicts and never blocks on quota
+  ---
+  duration_ms: 1.224512
+  type: 'test'
+  ...
+# Subtest: batch review flags sibling classes and applies the plan size limit after deduplication
+ok 7 - batch review flags sibling classes and applies the plan size limit after deduplication
+  ---
+  duration_ms: 30.584582
+  type: 'test'
+  ...
+# Subtest: automatic plan names use Chinese numbers and reuse gaps without renaming existing plans
+ok 8 - automatic plan names use Chinese numbers and reuse gaps without renaming existing plans
+  ---
+  duration_ms: 1.484942
+  type: 'test'
+  ...
+# Subtest: conflicts require shared weekday, period and teaching week
+ok 9 - conflicts require shared weekday, period and teaching week
+  ---
+  duration_ms: 0.998695
+  type: 'test'
+  ...
+# Subtest: self-selection is excluded and course pairs are counted once
+ok 10 - self-selection is excluded and course pairs are counted once
+  ---
+  duration_ms: 0.920601
+  type: 'test'
+  ...
+# Subtest: simulation filtering includes full and over-enrolled courses
+ok 11 - simulation filtering includes full and over-enrolled courses
+  ---
+  duration_ms: 1.010299
+  type: 'test'
+  ...
+# Subtest: filters combine keyword, campus and known conflict-free times
+ok 12 - filters combine keyword, campus and known conflict-free times
+  ---
+  duration_ms: 0.335842
+  type: 'test'
+  ...
+# Subtest: import rejects wrong semester and unknown courses without partial import
+ok 13 - import rejects wrong semester and unknown courses without partial import
+  ---
+  duration_ms: 5.663814
+  type: 'test'
+  ...
+# Subtest: restoring after a catalog update removes missing courses while preserving all plans
+ok 14 - restoring after a catalog update removes missing courses while preserving all plans
+  ---
+  duration_ms: 0.681115
+  type: 'test'
+  ...
+# Subtest: CSV escapes cells and neutralizes spreadsheet formulas
+ok 15 - CSV escapes cells and neutralizes spreadsheet formulas
+  ---
+  duration_ms: 0.283346
+  type: 'test'
+  ...
+# Subtest: HTML export escapes embedded data and contains offline week controls
+ok 16 - HTML export escapes embedded data and contains offline week controls
+  ---
+  duration_ms: 1.063876
+  type: 'test'
+  ...
+# Subtest: timetable merges consecutive periods and separates nonconsecutive periods
+ok 17 - timetable merges consecutive periods and separates nonconsecutive periods
+  ---
+  duration_ms: 1.331228
+  type: 'test'
+  ...
+# Subtest: overlapping blocks have separate lanes; alternating weeks are not conflicts
+ok 18 - overlapping blocks have separate lanes; alternating weeks are not conflicts
+  ---
+  duration_ms: 18.594679
+  type: 'test'
+  ...
+# Subtest: teaching weeks change on Monday and retain the Sunday in its current week
+ok 19 - teaching weeks change on Monday and retain the Sunday in its current week
+  ---
+  duration_ms: 0.877442
+  type: 'test'
+  ...
+# Subtest: semester boundaries and missing or invalid dates are explicit
+ok 20 - semester boundaries and missing or invalid dates are explicit
+  ---
+  duration_ms: 0.432144
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1064.902055

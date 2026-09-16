@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="6dp"
+    android:background="@drawable/widget_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="本周课表"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:padding="2dp" />
+        <TextView
+            android:id="@+id/widget_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="第 1 周 · 9月16日"
+            android:textSize="10sp"
+            android:padding="2dp" />
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:stretchColumns="0,1,2,3,4">
+
+        <TableRow android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="节次" android:textStyle="bold" android:textSize="9sp" />
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="周一" android:textStyle="bold" android:textSize="10sp" />
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="周二" android:textStyle="bold" android:textSize="10sp" />
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="周三" android:textStyle="bold" android:textSize="10sp" />
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="周四" android:textStyle="bold" android:textSize="10sp" />
+        </TableRow>
+
+        <TableRow android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="1-2" android:textSize="9sp" />
+            <TextView android:id="@+id/widget_c_1_1" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_2_1" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_3_1" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_4_1" style="@style/WidgetCell" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="3-4" android:textSize="9sp" />
+            <TextView android:id="@+id/widget_c_1_2" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_2_2" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_3_2" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_4_2" style="@style/WidgetCell" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="5-6" android:textSize="9sp" />
+            <TextView android:id="@+id/widget_c_1_3" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_2_3" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_3_3" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_4_3" style="@style/WidgetCell" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="7-8" android:textSize="9sp" />
+            <TextView android:id="@+id/widget_c_1_4" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_2_4" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_3_4" style="@style/WidgetCell" />
+            <TextView android:id="@+id/widget_c_4_4" style="@style/WidgetCell" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/widget_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="点击课表打开 App"
+        android:textSize="8sp"
+        android:paddingTop="2dp" />
+</LinearLayout>
