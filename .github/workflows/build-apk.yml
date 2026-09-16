@@ -9,38 +9,42 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install npm dependencies
-        run: npm ci
-
-      - name: Sync Capacitor Android
-        run: npx cap sync android
-
-      - name: Setup Java
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
+          cache: gradle
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
 
-      - name: Build Debug APK
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Prepare web assets and sync Android
+        run: npm run sync:android
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x android/gradlew
+
+      - name: Build debug APK
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: ucas-timetable-widget-apk
+          name: ucas-timetable-widget-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
