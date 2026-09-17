@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="4dp"
     android:background="@drawable/widget_background">
+
+    <!-- 标题 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="本周课表"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/widget_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|right"
+            android:text="周次"
+            android:textSize="8sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+    </LinearLayout>
 
     <!-- 星期标题 -->
     <LinearLayout
@@ -19,8 +52,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text=""
-            android:textSize="10sp" />
+            android:text="节次"
+            android:textSize="8sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="0dp"
@@ -28,7 +62,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="周一"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold" />
 
         <TextView
@@ -37,7 +71,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="周二"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold" />
 
         <TextView
@@ -46,7 +80,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="周三"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold" />
 
         <TextView
@@ -55,16 +89,16 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="周四"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold" />
 
     </LinearLayout>
 
-    <!-- 第1-2节 -->
+    <!-- 1-2 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:orientation="horizontal">
 
         <TextView
@@ -73,7 +107,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="1-2"
-            android:textSize="9sp" />
+            android:textSize="8sp" />
 
         <TextView
             android:id="@+id/widget_c_1_1"
@@ -81,47 +115,55 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_1_2"
+            android:id="@+id/widget_c_2_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_1_3"
+            android:id="@+id/widget_c_3_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_1_4"
+            android:id="@+id/widget_c_4_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
     </LinearLayout>
 
-    <!-- 第3-4节 -->
+    <!-- 3-4 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:orientation="horizontal">
 
         <TextView
@@ -130,17 +172,19 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="3-4"
-            android:textSize="9sp" />
+            android:textSize="8sp" />
 
         <TextView
-            android:id="@+id/widget_c_2_1"
+            android:id="@+id/widget_c_1_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
             android:id="@+id/widget_c_2_2"
@@ -148,37 +192,43 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_2_3"
+            android:id="@+id/widget_c_3_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_2_4"
+            android:id="@+id/widget_c_4_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
     </LinearLayout>
 
-    <!-- 第5-6节 -->
+    <!-- 5-6 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:orientation="horizontal">
 
         <TextView
@@ -187,27 +237,31 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="5-6"
-            android:textSize="9sp" />
+            android:textSize="8sp" />
 
         <TextView
-            android:id="@+id/widget_c_3_1"
+            android:id="@+id/widget_c_1_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_3_2"
+            android:id="@+id/widget_c_2_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
             android:id="@+id/widget_c_3_3"
@@ -215,27 +269,31 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_3_4"
+            android:id="@+id/widget_c_4_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
     </LinearLayout>
 
-    <!-- 第7-8节 -->
+    <!-- 7-8 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:orientation="horizontal">
 
         <TextView
@@ -244,37 +302,43 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="7-8"
-            android:textSize="9sp" />
+            android:textSize="8sp" />
 
         <TextView
-            android:id="@+id/widget_c_4_1"
+            android:id="@+id/widget_c_1_4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_4_2"
+            android:id="@+id/widget_c_2_4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
-            android:id="@+id/widget_c_4_3"
+            android:id="@+id/widget_c_3_4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
         <TextView
             android:id="@+id/widget_c_4_4"
@@ -282,10 +346,23 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="2dp"
             android:text="—"
-            android:textSize="8sp" />
+            android:textSize="7sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:padding="2dp" />
 
     </LinearLayout>
+
+    <!-- 底部状态 -->
+    <TextView
+        android:id="@+id/widget_status"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:gravity="center"
+        android:text="点击课表打开 App"
+        android:textSize="7sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
 </LinearLayout>
