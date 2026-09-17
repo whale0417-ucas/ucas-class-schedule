@@ -7,151 +7,508 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 
 public class TimetableWidgetProvider extends AppWidgetProvider {
+
     public static final String PREFS = "ucas_widget";
     public static final String KEY = "timetable_snapshot";
 
-    private static final String[] DAY_NAMES = {"周一", "周二", "周三", "周四"};
-    private static final String[] PERIOD_NAMES = {"1-2", "3-4", "5-6", "7-8"};
-
-    @Override public void onUpdate(Context c, AppWidgetManager m, int[] ids) {
-        for (int id : ids) update(c, m, id);
-    }
-
-    @Override public void onEnabled(Context c) {
-        super.onEnabled(c);
-        refreshAll(c);
-    }
-
-    @Override public void onReceive(Context c, Intent intent) {
-        super.onReceive(c, intent);
-        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction()) ||
-            Intent.ACTION_TIME_CHANGED.equals(intent.getAction()) ||
-            Intent.ACTION_TIMEZONE_CHANGED.equals(intent.getAction()) ||
-            Intent.ACTION_DATE_CHANGED.equals(intent.getAction())) {
-            refreshAll(c);
+    @Override
+    public void onUpdate(Context context, AppWidgetManager manager, int[] appWidgetIds) {
+        for (int appWidgetId : appWidgetIds) {
+            update(context, manager, appWidgetId);
         }
     }
 
-    public static void refreshAll(Context c) {
-        AppWidgetManager m = AppWidgetManager.getInstance(c);
-        ComponentName n = new ComponentName(c, TimetableWidgetProvider.class);
-        for (int id : m.getAppWidgetIds(n)) update(c, m, id);
+    @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+        refreshAll(context);
     }
 
-    public static void update(Context c, AppWidgetManager m, int id) {
-        RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_timetable);
-        Calendar cal = Calendar.getInstance();
-        String date = new SimpleDateFormat("M月d日", Locale.CHINA).format(cal.getTime());
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
 
-        String raw = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY, "");
+        String action = intent.getAction();
+
+        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action)
+                || Intent.ACTION_TIME_CHANGED.equals(action)
+                || Intent.ACTION_TIMEZONE_CHANGED.equals(action)
+                || Intent.ACTION_DATE_CHANGED.equals(action)) {
+
+            refreshAll(context);
+        }
+    }
+
+    public static void refreshAll(Context context) {
+        AppWidgetManager manager =
+                AppWidgetManager.getInstance(context);
+
+        ComponentName componentName =
+                new ComponentName(context, TimetableWidgetProvider.class);
+
+        int[] ids = manager.getAppWidgetIds(componentName);
+
+        for (int id : ids) {
+            update(context, manager, id);
+        }
+    }
+
+    public static void update(
+            Context context,
+            AppWidgetManager manager,
+            int appWidgetId) {
+
+        RemoteViews views =
+                new RemoteViews(
+                        context.getPackageName(),
+                        R.layout.widget_timetable
+                );
+
+        Calendar today = Calendar.getInstance();
+
+        String dateText =
+                new SimpleDateFormat(
+                        "M月d日",
+                        Locale.CHINA
+                ).format(today.getTime());
+
+        String raw =
+                context.getSharedPreferences(
+                        PREFS,
+                        Context.MODE_PRIVATE
+                ).getString(KEY, "");
+
         JSONObject root = null;
-        try { if (!raw.isEmpty()) root = new JSONObject(raw); } catch (Exception ignored) {}
 
-        int teachingWeek = getTeachingWeek(root, cal);
-        String weekText = teachingWeek > 0 ? "第 " + teachingWeek + " 周" : "周次未设置";
-        v.setTextViewText(R.id.widget_title, "本周课表");
-        v.setTextViewText(R.id.widget_date, weekText + " · " + date);
+        try {
+            if (!raw.isEmpty()) {
+                root = new JSONObject(raw);
+            }
+        } catch (Exception ignored) {
+        }
 
-        for (int d = 1; d <= 4; d++) {
-            for (int r = 1; r <= 4; r++) {
-                int cid = cellId(c, d, r);
-                v.setTextViewText(cid, "—");
+        int teachingWeek = getTeachingWeek(root, today);
+
+        String weekText;
+
+        if (teachingWeek > 0) {
+            weekText = "第 " + teachingWeek + " 周";
+        } else {
+            weekText = "周次未设置";
+        }
+
+        views.setTextViewText(
+                R.id.widget_title,
+                "本周课表"
+        );
+
+        views.setTextViewText(
+                R.id.widget_date,
+                weekText + " · " + dateText
+        );
+
+        // 先清空 16 个课程格。
+        for (int day = 1; day <= 4; day++) {
+            for (int row = 1; row <= 4; row++) {
+
+                int id = getCellId(
+                        context,
+                        day,
+                        row
+                );
+
+                views.setTextViewText(id, "—");
             }
         }
 
-        boolean any = false;
+        boolean hasCourse = false;
+
         if (root != null) {
+
             try {
-                JSONArray courses = root.optJSONArray("courses");
+
+                JSONArray courses =
+                        root.optJSONArray("courses");
+
                 if (courses != null) {
-                    Map<String, StringBuilder> cells = new HashMap<>();
-                    for (int i = 0; i < courses.length(); i++) {
-                        JSONObject course = courses.optJSONObject(i);
-                        if (course == null) continue;
-                        String name = course.optString("name", "").trim();
-                        if (name.isEmpty()) continue;
-                        JSONArray sessions = course.optJSONArray("sessions");
-                        if (sessions == null) continue;
-                        for (int j = 0; j < sessions.length(); j++) {
-                            JSONObject s = sessions.optJSONObject(j);
-                            if (s == null || s.optInt("day", 0) < 1 || s.optInt("day", 0) > 4) continue;
-                            JSONArray weeks = s.optJSONArray("weeks");
-                            if (teachingWeek > 0 && weeks != null && !contains(weeks, teachingWeek)) continue;
-                            JSONArray periods = s.optJSONArray("periods");
-                            if (periods == null) continue;
-                            String room = s.optString("room", "").trim();
-                            String text = name + (room.isEmpty() ? "" : "\n" + room);
-                            int day = s.optInt("day");
-                            java.util.HashSet<Integer> addedRows = new java.util.HashSet<>();
-                            for (int k = 0; k < periods.length(); k++) {
-                                int period = periods.optInt(k, 0);
-                                int row = (period + 1) / 2;
-                                if (row < 1 || row > 4 || addedRows.contains(row)) continue;
+
+                    Map<String, StringBuilder> cells =
+                            new HashMap<>();
+
+                    for (int i = 0;
+                         i < courses.length();
+                         i++) {
+
+                        JSONObject course =
+                                courses.optJSONObject(i);
+
+                        if (course == null) {
+                            continue;
+                        }
+
+                        String courseName =
+                                course
+                                        .optString("name", "")
+                                        .trim();
+
+                        if (courseName.isEmpty()) {
+                            continue;
+                        }
+
+                        JSONArray sessions =
+                                course.optJSONArray("sessions");
+
+                        if (sessions == null) {
+                            continue;
+                        }
+
+                        for (int j = 0;
+                             j < sessions.length();
+                             j++) {
+
+                            JSONObject session =
+                                    sessions.optJSONObject(j);
+
+                            if (session == null) {
+                                continue;
+                            }
+
+                            int day =
+                                    session.optInt("day", 0);
+
+                            // 小组件目前显示周一到周四。
+                            if (day < 1 || day > 4) {
+                                continue;
+                            }
+
+                            // 判断当前教学周。
+                            JSONArray weeks =
+                                    session.optJSONArray("weeks");
+
+                            if (teachingWeek > 0
+                                    && weeks != null
+                                    && !containsWeek(
+                                    weeks,
+                                    teachingWeek)) {
+
+                                continue;
+                            }
+
+                            JSONArray periods =
+                                    session.optJSONArray("periods");
+
+                            if (periods == null) {
+                                continue;
+                            }
+
+                            String room =
+                                    session
+                                            .optString("room", "")
+                                            .trim();
+
+                            String courseText;
+
+                            if (room.isEmpty()) {
+                                courseText = courseName;
+                            } else {
+                                courseText =
+                                        courseName
+                                                + "\n"
+                                                + room;
+                            }
+
+                            /*
+                             * 一个课程可能同时占用：
+                             * 1、2 节
+                             * 或 3、4 节
+                             * 等。
+                             *
+                             * 因此把具体节次转换成：
+                             * 1-2 → 第1行
+                             * 3-4 → 第2行
+                             * 5-6 → 第3行
+                             * 7-8 → 第4行
+                             */
+                            HashSet<Integer> addedRows =
+                                    new HashSet<>();
+
+                            for (int k = 0;
+                                 k < periods.length();
+                                 k++) {
+
+                                int period =
+                                        periods.optInt(
+                                                k,
+                                                0
+                                        );
+
+                                if (period <= 0) {
+                                    continue;
+                                }
+
+                                int row =
+                                        (period + 1) / 2;
+
+                                if (row < 1 || row > 4) {
+                                    continue;
+                                }
+
+                                if (addedRows.contains(row)) {
+                                    continue;
+                                }
+
                                 addedRows.add(row);
-                                String key = day + ":" + row;
-                                StringBuilder sb = cells.get(key);
-                                if (sb == null) { sb = new StringBuilder(); cells.put(key, sb); }
-                                if (sb.length() > 0) sb.append("\n\n");
-                                sb.append(text);
+
+                                String key =
+                                        day + ":" + row;
+
+                                StringBuilder text =
+                                        cells.get(key);
+
+                                if (text == null) {
+
+                                    text =
+                                            new StringBuilder();
+
+                                    cells.put(
+                                            key,
+                                            text
+                                    );
+                                }
+
+                                if (text.length() > 0) {
+                                    text.append("\n\n");
+                                }
+
+                                text.append(courseText);
                             }
                         }
                     }
-                    for (Map.Entry<String, StringBuilder> e : cells.entrySet()) {
-                        String[] parts = e.getKey().split(":");
-                        int day = Integer.parseInt(parts[0]);
-                        int row = Integer.parseInt(parts[1]);
-                        String text = e.getValue().toString();
-                        if (text.length() > 120) text = text.substring(0, 117) + "…";
-                        v.setTextViewText(cellId(c, day, row), text);
-                        any = true;
+
+                    // 把课程写入对应的小组件格子。
+                    for (Map.Entry<String, StringBuilder> entry
+                            : cells.entrySet()) {
+
+                        String[] parts =
+                                entry.getKey().split(":");
+
+                        if (parts.length != 2) {
+                            continue;
+                        }
+
+                        int day =
+                                Integer.parseInt(parts[0]);
+
+                        int row =
+                                Integer.parseInt(parts[1]);
+
+                        String text =
+                                entry.getValue().toString();
+
+                        // 防止课程文字过长把小组件撑坏。
+                        if (text.length() > 120) {
+                            text =
+                                    text.substring(0, 117)
+                                            + "…";
+                        }
+
+                        int id =
+                                getCellId(
+                                        context,
+                                        day,
+                                        row
+                                );
+
+                        views.setTextViewText(
+                                id,
+                                text
+                        );
+
+                        hasCourse = true;
                     }
                 }
-            } catch (Exception ignored) {}
-        }
-        if (!any) v.setTextViewText(R.id.widget_status, "请打开 App 并先选择课程");
-        else v.setTextViewText(R.id.widget_status, "点击课表打开 App");
 
-        Intent launch = c.getPackageManager().getLaunchIntentForPackage(c.getPackageName());
-        if (launch != null) {
-            PendingIntent pi = PendingIntent.getActivity(c, 0, launch,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-            v.setOnClickPendingIntent(R.id.widget_root, pi);
+            } catch (Exception ignored) {
+                // 数据异常时保持空课表，不让小组件崩溃。
+            }
         }
-        m.updateAppWidget(id, v);
+
+        if (hasCourse) {
+
+            views.setTextViewText(
+                    R.id.widget_status,
+                    "点击课表打开 App"
+            );
+
+        } else {
+
+            views.setTextViewText(
+                    R.id.widget_status,
+                    "请打开 App 并先选择课程"
+            );
+        }
+
+        // 点击整个小组件 → 打开 UCAS 课表 App。
+        Intent launchIntent =
+                context.getPackageManager()
+                        .getLaunchIntentForPackage(
+                                context.getPackageName()
+                        );
+
+        if (launchIntent != null) {
+
+            PendingIntent pendingIntent =
+                    PendingIntent.getActivity(
+                            context,
+                            0,
+                            launchIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                                    | PendingIntent.FLAG_IMMUTABLE
+                    );
+
+            views.setOnClickPendingIntent(
+                    R.id.widget_root,
+                    pendingIntent
+            );
+        }
+
+        manager.updateAppWidget(
+                appWidgetId,
+                views
+        );
     }
 
-    private static int cellId(Context c, int day, int row) {
-        return c.getResources().getIdentifier("widget_c_" + day + "_" + row, "id", c.getPackageName());
+    private static int getCellId(
+            Context context,
+            int day,
+            int row) {
+
+        return context
+                .getResources()
+                .getIdentifier(
+                        "widget_c_"
+                                + day
+                                + "_"
+                                + row,
+                        "id",
+                        context.getPackageName()
+                );
     }
 
-    private static boolean contains(JSONArray a, int value) {
-        for (int i = 0; i < a.length(); i++) if (a.optInt(i, Integer.MIN_VALUE) == value) return true;
+    private static boolean containsWeek(
+            JSONArray weeks,
+            int targetWeek) {
+
+        for (int i = 0;
+             i < weeks.length();
+             i++) {
+
+            if (weeks.optInt(
+                    i,
+                    Integer.MIN_VALUE
+            ) == targetWeek) {
+
+                return true;
+            }
+        }
+
         return false;
     }
 
-    private static int getTeachingWeek(JSONObject root, Calendar today) {
-        if (root == null) return 0;
-        String start = root.optString("semesterStart", "");
-        if (start.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            try {
-                Calendar s = Calendar.getInstance();
-                s.setLenient(false);
-                s.set(Integer.parseInt(start.substring(0,4)), Integer.parseInt(start.substring(5,7)) - 1,
-                    Integer.parseInt(start.substring(8,10)), 0, 0, 0);
-                s.set(Calendar.MILLISECOND, 0);
-                long diff = today.getTimeInMillis() - s.getTimeInMillis();
-                if (diff >= 0) return (int)(diff / (7L * 24L * 60L * 60L * 1000L)) + 1;
-            } catch (Exception ignored) {}
+    private static int getTeachingWeek(
+            JSONObject root,
+            Calendar today) {
+
+        if (root == null) {
+            return 0;
         }
+
+        String semesterStart =
+                root.optString(
+                        "semesterStart",
+                        ""
+                );
+
+        /*
+         * 如果 App 已经保存了开学日期，
+         * 根据开学日期自动计算当前教学周。
+         */
+        if (semesterStart.matches(
+                "\\d{4}-\\d{2}-\\d{2}"
+        )) {
+
+            try {
+
+                Calendar start =
+                        Calendar.getInstance();
+
+                start.setLenient(false);
+
+                start.set(
+                        Integer.parseInt(
+                                semesterStart.substring(
+                                        0,
+                                        4
+                                )
+                        ),
+                        Integer.parseInt(
+                                semesterStart.substring(
+                                        5,
+                                        7
+                                )
+                        ) - 1,
+                        Integer.parseInt(
+                                semesterStart.substring(
+                                        8,
+                                        10
+                                )
+                        ),
+                        0,
+                        0,
+                        0
+                );
+
+                start.set(
+                        Calendar.MILLISECOND,
+                        0
+                );
+
+                long difference =
+                        today.getTimeInMillis()
+                                - start.getTimeInMillis();
+
+                if (difference >= 0) {
+
+                    return (int)
+                            (
+                                    difference
+                                            / (
+                                            7L
+                                                    * 24L
+                                                    * 60L
+                                                    * 60L
+                                                    * 1000L
+                                    )
+                            ) + 1;
+                }
+
+            } catch (Exception ignored) {
+            }
+        }
+
+        // 如果没有开学日期，就使用 App 保存的 week。
         return root.optInt("week", 0);
     }
 }
